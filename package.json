@@ -1,0 +1,28 @@
+{
+  "name": "bmjs-html",
+  "version": "0.1.0",
+  "description": "A JavaScript library for generating static HTML.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brent258/bmjs-html.git"
+  },
+  "keywords": [
+    "html",
+    "javascript",
+    "nodejs"
+  ],
+  "author": "Brent McCoy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brent258/bmjs-html/issues"
+  },
+  "homepage": "https://github.com/brent258/bmjs-html#readme",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1"
+  }
+}
