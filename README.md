@@ -59,6 +59,11 @@ Output:
 ```html
 <h1 id="title" class="text-primary" active>Hello world!<span>This is an element inside an element</span></h1>
 ```
+The **html.tag.read()** method allows you to retrieve HTML templates or plain text from an external file, in place of the **html.tag.text()** method:
+
+```javascript
+let h1 = html.tag('h1').read('title.txt').close();
+```
 The **html.minify()** method allows you to compress the file by removing white space:
 
 ```javascript

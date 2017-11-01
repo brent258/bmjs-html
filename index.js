@@ -80,7 +80,7 @@ module.exports = {
   },
   raw: function(tag) {
     if (tag && typeof tag === 'string') {
-      this.body.tags.push(tag);
+      this.body.tags.push(tag.replace(/(\n\s\s\s\s)/g,'\n').replace(/(\n\s\s\s\s\s\s\s\s)/g,'\n    '));
       this.markup = this.body.tags.join('\n');
     }
     return this;
@@ -175,18 +175,28 @@ module.exports = {
           startTag += '>';
         }
         return startTag;
+      },
+      read: function(path) {
+        if (!path || typeof path !== 'string') {
+          throw new Error('You must correctly enter a file path.');
+        }
+        let data;
+        try {
+          data = fs.readFileSync(path,'utf8');
+          this.content.push(data.replace(/\n/g,''));
+          return this;
+        }
+        catch (error) {
+          throw error;
+        }
       }
     }
   },
   file: function(path) {
     if (path && this.markup) {
-      try {
-        fs.writeFile(path,this.markup);
-      }
-      catch (error) {
-        console.log(error);
-      }
-      return true;
+      fs.writeFile(path,this.markup,error => {
+        if (error) throw error;
+      });
     }
   }
 };

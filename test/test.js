@@ -61,16 +61,16 @@ describe('HTML', () => {
   });
 
   it('should write the generated HTML to a file', () => {
-    html.init();
-    let file = html.file('test/test.html');
-    expect(file).to.equal(true);
-    fs.readFile('test/test.html','utf8', (error,data) => {
-      if (error) {
-        console.log(error);
-      }
-      expect(data).to.not.be.undefined;
-      expect(data).to.not.equal('undefined');
-    });
+    html.init().title('Web page 0.1.1');
+    expect(()=>{html.file('test/test.html')}).to.not.throw();
+  });
+
+  it('HTML tag read file method should return file and not throw', () => {
+    expect(html.tag('p').read('test/test-paragraph.html').close()).to.be.a('string');
+    expect(html.tag('p').read('test/test-paragraph.html').close()).to.equal('<p>A test paragraph.</p>');
+    expect(html.tag('p').read('test/test-paragraph.txt').close()).to.be.a('string');
+    expect(html.tag('p').read('test/test-paragraph.txt').close()).to.equal('<p>A test paragraph.</p>');
+    expect(()=>{html.tag('p').read('test/test-paragraph.txt').close()}).to.not.throw();
   });
 
 });
