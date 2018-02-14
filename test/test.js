@@ -9,68 +9,67 @@ describe('HTML', () => {
     expect(html).to.not.be.undefined;
   });
 
-  it('should generate correct values for HTML tags', () => {
+  it('init should create blank template HTML file from library and use for markup', () => {
     html.init();
-    expect(html.tag()).to.be.an('object');
-    expect(html.tag('div').close()).to.equal('<div>\n    </div>');
-    expect(html.tag('div').attr('id','section').close()).to.equal('<div id="section">\n    </div>');
-    expect(html.tag('div').attr('id','section').prop('active').close()).to.equal('<div id="section" active>\n    </div>');
-    expect(html.tag('div').attr('id','section').attr('class','red').close()).to.equal('<div id="section" class="red">\n    </div>');
-    expect(html.tag('div').attr('id','section').prop('active').text(html.tag('h1').text('Hello world!').close()).close()).to.equal('<div id="section" active>\n        <h1>Hello world!</h1>\n    </div>');
-    expect(html.tag('div').attr('id','section').prop('active').open()).to.equal('<div id="section" active>');
-    expect(html.tag('/div')).to.equal('</div>');
-    expect(html.tag('</div>')).to.equal('</div>');
-    expect(html.tag()).to.not.be.undefined;
-  });
-
-  it('add method should correctly add HTML tags to the body', () => {
-    html.init().add('<h1>Hello</h1>').add('<h2>Hello</h2>');
-    expect(html.body.tags.length).to.equal(2);
-    expect(html.body.tags[0]).to.equal('<h1>Hello</h1>');
-    expect(html.body.tags[1]).to.equal('<h2>Hello</h2>');
-  });
-
-  it('raw method should correctly add raw HTML tags to the markup', () => {
-    html.init().raw('<h1>Hello</h1>').raw('<p>Some text...</p>');
-    expect(html.body.tags.length).to.equal(2);
-    expect(html.markup).to.equal('<h1>Hello</h1>\n<p>Some text...</p>');
-  });
-
-  it('head methods should return the correct tags and content', () => {
-    html.init().title('Hello');
-    expect(html.head.tags.length).to.equal(1);
-    expect(html.head.tags[0]).to.equal('<title>Hello</title>');
-    html.init().description('Hello');
-    expect(html.head.tags.length).to.equal(1);
-    expect(html.head.tags[0]).to.equal('<meta name="description" content="Hello" />');
-    html.init().keywords('Hello');
-    expect(html.head.tags.length).to.equal(1);
-    expect(html.head.tags[0]).to.equal('<meta name="keywords" content="Hello" />');
-    html.init().stylesheet('style.css');
-    expect(html.head.tags.length).to.equal(1);
-    expect(html.head.tags[0]).to.equal('<link rel="stylesheet" type="text/css" href="style.css" />');
-  });
-
-  it('init method should create a document with empty head and body tags', () => {
-    html.init();
+    expect(html.markup.length > 0).to.equal(true);
     expect(html.markup).to.be.a('string');
-    expect(html.head.markup).to.be.a('string');
-    expect(html.body.markup).to.be.a('string');
-    expect(html.body.tags.length).to.equal(0);
-    expect(html.head.tags.length).to.equal(0);
+    expect(html.$).to.be.a('function');
   });
 
-  it('should write the generated HTML to a file', () => {
-    html.init().title('Web page 0.1.1');
-    expect(()=>{html.file('test/test.html')}).to.not.throw();
+  it('minify should remove all new line characters', () => {
+    html.init();
+    html.minify();
+    expect(html.markup.match(/\n/)).to.equal(null);
   });
 
-  it('HTML tag read file method should return file and not throw', () => {
-    expect(html.tag('p').read('test/test-paragraph.html').close()).to.be.a('string');
-    expect(html.tag('p').read('test/test-paragraph.html').close()).to.equal('<p>A test paragraph.</p>');
-    expect(html.tag('p').read('test/test-paragraph.txt').close()).to.be.a('string');
-    expect(html.tag('p').read('test/test-paragraph.txt').close()).to.equal('<p>A test paragraph.</p>');
-    expect(()=>{html.tag('p').read('test/test-paragraph.txt').close()}).to.not.throw();
+  it('format should correct formatting of html tags', () => {
+    html.init();
+    html.format();
+    expect(html.markup.match(/></)).to.equal(null);
   });
+
+  it('is self closing should recognize self closing tags', () => {
+    expect(html.isSelfClosing('div')).to.equal(false);
+    expect(html.isSelfClosing('img')).to.equal(true);
+    expect(html.isSelfClosing('meta')).to.equal(true);
+  });
+
+  it('el should return a new dom selection object', () => {
+    html.init();
+    expect(html.el()).to.be.an('object');
+  });
+
+  it('refresh should update html', () => {
+    html.init();
+    let html1 = html.markup;
+    html.el();
+    html.el('h1').text('title').addClass('text-primary p-0');
+    html.refresh();
+    let html2 = html.markup;
+    expect(html1).to.not.equal(html2);
+  });
+
+  it('write should save html file to path', () => {
+    html.init();
+    html.title('Cool title').description('A cool description.').url('mywebsite.com').keywords('html,css,javascript').css(['styles.css','custom.css']);
+    html.el('','','#main');
+    html.add('#main','li_a');
+    html.write();
+  });
+
+  it('raw should save html file to path without meta tags', () => {
+    html.init();
+    html.el('','','#main');
+    html.add('#main','li_a');
+    html.raw('','raw.html');
+  });
+
+  it('init should create custom templates', () => {
+    html.init('li');
+    expect(html.markup.length > 0).to.equal(true);
+    expect(html.markup).to.be.a('string');
+    expect(html.$).to.be.a('function');
+  });
+
 
 });

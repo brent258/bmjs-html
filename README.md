@@ -1,95 +1,56 @@
 # bmjs-html
 A JavaScript library for generating static HTML.
-
 ```javascript
 const html = require('bmjs-html');
 ```
-
 Create an empty document with **html.init()**:
-
 ```javascript
 html.init();
 ```
 Generates a starter webpage with basic content:
-
 ```html
 <!DOCTYPE html>
-<html lang="eng">
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
+<title>My website</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name="robots" content="index,follow">
+<meta name="description" content="">
+<meta name="url" content="">
+<meta name="keywords" content="">
+<meta property="og:title" content="">
+<meta property="og:description" content="">
+<meta property="og:url" content="">
 </head>
 <body>
-
 </body>
 </html>
 ```
-Add basic meta information with **html.title()**, **html.description()** and **html.keywords()** plus external CSS with **html.stylesheet()**:
-
+Add basic meta information with **html.title(content)**, **html.description(content)** and **html.keywords(content)** plus links to CSS stylesheets as a string or array of multiple values with **html.css(stylesheets)**:
 ```javascript
 html.init();
 html.title('My web page');
 html.description('This is a description of my web page...');
 html.keywords('HTML,CSS,JavaScript');
-html.stylesheet('styles.css');
+html.css('styles.css');
 ```
 Most methods return the HTML object itself and are designed to be chained together:
-
 ```javascript
-html.init().title('My web page').description('This is a description of my web page...').keywords('HTML,CSS,JavaScript').stylesheet('styles.css');
+html.init().title('My web page').description('This is a description of my web page...').keywords('HTML,CSS,JavaScript').css('styles.css');
 ```
-Add HTML elements to the body using **html.add()**:
-
+Add HTML elements to a custom selector using **html.el(tag,selector,[classname,file])**. Returns a jQuery-like selection of the selected DOM element and optional arguments enable convenient setting of the newly created element's classname and text content using an external file:
 ```javascript
-html.add('<h1>Hello world</h1>').add('<p>Welcome to my web page...</p>');
+html.el('h1','body').text('Hello world!').addClass('text-primary p-0');
 ```
-The library also has a **html.tag()** method that returns an object for dynamically creating HTML elements:
-
+Add HTML templates from an external file to a custom selector using **html.add(selector,file)**:
 ```javascript
-let h1 = html.tag('h1') // Initializes the tag object
-.attr('id','title').attr('class','text-primary') // Add attributes with the attr() method
-.prop('active') // Or boolean properties with the prop() method
-.text('Hello world!').text('<span>This is an element inside an element</span>') // Add inner text or other HTML elements with the text() method
-.close(); // Finalize the element and convert the result to a string
-html.add(h1); // Add to the web page body
+html.add('body','src/template.html').addClass('bg-primary p-5');
 ```
-Output:
-
-```html
-<h1 id="title" class="text-primary" active>Hello world!<span>This is an element inside an element</span></h1>
-```
-The **html.tag.read()** method allows you to retrieve HTML templates or plain text from an external file, in place of the **html.tag.text()** method:
-
+When you're done save the result to a file and optionally remove white space with **html.write(dir,filename,[minify])**:
 ```javascript
-let h1 = html.tag('h1').read('title.txt').close();
+html.write('dist','index.html',true);
 ```
-The **html.minify()** method allows you to compress the file by removing white space:
-
+Use **html.raw(dir,filename,[minify])** for saving the body's inner HTML content without meta information, for uses such as creating template files:
 ```javascript
-html.minify();
-```
-Output:
-
-```html
-<!DOCTYPE html><html lang="eng"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" /><title>My webpage</title><link rel="stylesheet" type="text/css" href="styles.css" /></head><body><h1 id="title" class="text-primary" active>Hello world!<span>This is an element inside an element</span></h1></body></html>
-```
-When you're done save the result to a file with **html.file()** (make sure if saving into a folder that the folder exists first):
-
-```javascript
-html.file('index.html');
-```
-If you don't need the boilerplate head and body tags (like when creating Angular templates) use **html.raw()** for creating a document with just the dynamic HTML tags:
-
-```javascript
-html.init();
-let h1 = html.tag('h1').attr('class','heading').text('{{title}}').close();
-let h2 = html.tag('h2').attr('class','subheading').text('{{subtitle}}').close();
-html.raw(h1).raw(h2).minify();
-html.file('template.html');
-```
-Always remember the **html.tag.close()** method, or things won't work. Output:
-
-```html
-<h1 class="heading">{{title}}</h1><h2 class="subheading">{{subtitle}}</h2>
-```
+html.raw('dist','index.html');
