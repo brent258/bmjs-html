@@ -201,7 +201,7 @@ module.exports = {
   title: function(content) {
     if (this.markup && this.$) {
       this.$('title').text(content);
-      this.$('meta[name="og:title"]').attr('content',content);
+      this.$('meta[property="og:title"]').attr('content',content);
     }
     return this;
   },
@@ -209,7 +209,7 @@ module.exports = {
   description: function(content) {
     if (this.markup && this.$) {
       this.$('meta[name="description"]').attr('content',content);
-      this.$('meta[name="og:description"]').attr('content',content);
+      this.$('meta[property="og:description"]').attr('content',content);
     }
     return this;
   },
@@ -217,7 +217,7 @@ module.exports = {
   url: function(content) {
     if (this.markup && this.$) {
       this.$('meta[name="url"]').attr('content',content);
-      this.$('meta[name="og:url"]').attr('content',content);
+      this.$('meta[property="og:url"]').attr('content',content);
     }
     return this;
   },
