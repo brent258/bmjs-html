@@ -50,16 +50,14 @@ describe('HTML', () => {
   });
 
   it('write should save html file to path', () => {
-    html.init();
-    html.title('Cool title').description('A cool description.').url('mywebsite.com').keywords('html,css,javascript').css(['styles.css','custom.css']);
-    html.el('','','#main');
-    html.add('#main','li_a');
+    html.init('col_1');
+    html.title('Cool title').description('A cool description.').url('mywebsite.com').keywords('html,css,javascript').css(['normalize.css','styles.css']);
+    html.add('#center','div_2');
     html.write();
   });
 
   it('raw should save html file to path without meta tags', () => {
-    html.init();
-    html.el('','','#main');
+    html.init('col_1');
     html.add('#main','li_a');
     html.raw('','raw.html');
   });
